@@ -26,7 +26,6 @@ def prepare_df(age, income, loan_amount, loan_tenure_months, avg_dpd_per_delinqu
         'number_of_open_accounts': num_open_accounts,
         'residence_type_Owned': 1 if residence_type == "Owned" else 0,
         'residence_type_Rented': 1 if residence_type == "Rented" else 0,
-        'residence_type_Education': 1 if residence_type == "Education" else 0,
         'loan_purpose_Home': 1 if loan_purpose == "Home" else 0,
         'loan_purpose_Personal': 1 if loan_purpose == "Personal" else 0,
         'loan_purpose_Education': 1 if loan_purpose == "Education" else 0,
@@ -66,13 +65,16 @@ def get_rating(score):
     else:
         return 'Undefined'
 
-def calculate_credit_score(input_df, base_score=300, scale_length=900):
+def calculate_credit_score(input_df, base_score=300, scale_length=600):
     x = np.dot(input_df.values, model.coef_.T) + model.intercept_
     
     default_probability = 1 / (1 + np.exp(-x))
     non_default_probability = 1 - default_probability
     credit_score = base_score + (non_default_probability.flatten()[0] * scale_length)
     rating = get_rating(credit_score)
+    print(input_df.T)
+    print(dict(zip(input_df.columns, model.coef_.flatten())))
+    print("intercept:", model.intercept_)
     
     return default_probability.flatten()[0], int(credit_score), rating
     

@@ -49,15 +49,15 @@ with row4[2]:
 
 
 
-
-
 # Button to calculate risk
 if st.button('Calculate Risk'):
-    probability, credit_score, rating = predict(age, income, loan_amount, loan_tenure_months, avg_dpd_per_delinquency, delinquency_ratio, credit_utilization_ratio, num_open_accounts, residence_type, loan_purpose, loan_type)
-    
-    st.write(f"Default Probability: {probability:.2f}")
+    st.session_state.result = predict(age, income, loan_amount, loan_tenure_months, avg_dpd_per_delinquency, delinquency_ratio, credit_utilization_ratio, num_open_accounts, residence_type, loan_purpose, loan_type)
+
+if 'result' in st.session_state:
+    probability, credit_score, rating = st.session_state.result
+    st.write(f"Default Probability: {100 * probability:.2f} %")
     st.write(f"Credit Score: {credit_score}")
     st.write(f"Rating: {rating}")
     
 
-# st.markdown('_Project From Codebasics ML Course_')
+st.markdown('_Project From Codebasics ML Course_')
